@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:master/base/base_widget.dart';
+import 'package:master/base/base_page.dart';
 import 'package:master/pages/home_page.dart';
 import 'package:master/widget/margin_widget.dart';
 
