@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:master/base/base_widget.dart';
 
@@ -8,25 +8,23 @@ import 'package:master/base/base_widget.dart';
  * @date   2020-05-08.
  */
 
-class HomePage extends BaseWidget{
+class HomePage extends BasePage {
   @override
-  BaseWidgetState<BaseWidget> getPageState() {
+  BasePageState<HomePage> getPageState() {
     return PageState();
   }
 }
 
-
-class PageState extends BaseWidgetState{
+class PageState extends BasePageState<HomePage> {
   @override
   Widget pageBody() {
     return Center(
-      child: Text("微购 商家端"),
+      child: Text("fdsafsda"),
     );
   }
 
   @override
   String pageTitle() {
-    return "微购";
+    return "";
   }
-
 }

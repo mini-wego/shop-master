@@ -8,8 +8,8 @@ import 'package:master/base/page_struct.dart';
  * @date   2020-01-21.
  */
 
-abstract class BaseWidget extends StatefulWidget {
-  BaseWidgetState baseWidgetState;
+abstract class BasePage extends StatefulWidget {
+  BasePageState baseWidgetState;
 
   @override
   State<StatefulWidget> createState() {
@@ -18,10 +18,10 @@ abstract class BaseWidget extends StatefulWidget {
   }
 
   //由具体子类实现
-  BaseWidgetState getPageState();
+  BasePageState getPageState();
 }
 
-abstract class BaseWidgetState<T extends BaseWidget> extends State<T>
+abstract class BasePageState<T extends BasePage> extends State<T>
     with PageStruct {
   BODY_TYPE _bodyType = BODY_TYPE.BODY_WITH_APPBAR;
 
