@@ -1,6 +1,13 @@
+import 'dart:io';
+
+import 'package:data_plugin/bmob/bmob_file_manager.dart';
+import 'package:data_plugin/bmob/response/bmob_error.dart';
+import 'package:data_plugin/bmob/type/bmob_file.dart';
+import 'package:data_plugin/data_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:master/base/base_page.dart';
 import 'package:master/widget/margin_widget.dart';
 
@@ -17,10 +24,9 @@ class HomePage extends BasePage {
   }
 }
 
-int type =0;
+int type = 0;
 
 class PageState extends BasePageState<HomePage> {
-
   TextEditingController _titleEditingController = TextEditingController();
   TextEditingController _phoneNumberEditingController = TextEditingController();
   TextEditingController _priceEditingController = TextEditingController();
@@ -38,6 +44,9 @@ class PageState extends BasePageState<HomePage> {
     TypeItemEntity("炖菜", 4),
     TypeItemEntity("其他", 5),
   ];
+
+  String _imgUrl;
+
   @override
   Widget pageBody() {
     return ListView(
@@ -62,11 +71,10 @@ class PageState extends BasePageState<HomePage> {
                     keyboardType: TextInputType.text,
                     decoration: new InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.pinkAccent, width: 2)),
+                            borderSide:
+                                BorderSide(color: Colors.pinkAccent, width: 2)),
                         contentPadding: const EdgeInsets.all(10.0),
-                        labelStyle:
-                        TextStyle(color: Colors.grey, fontSize: 14),
+                        labelStyle: TextStyle(color: Colors.grey, fontSize: 14),
                         labelText: "请输入菜系标题..."),
                     onChanged: (String str) {
                       if (str.length >= 100) {
@@ -95,45 +103,49 @@ class PageState extends BasePageState<HomePage> {
             ),
             Margin(height: 20.0),
 
-
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(width: 2.0),
-                  Text("▌",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orangeAccent)),
-                  SizedBox(width: 10.0),
-                  Text("菜系类型",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13)),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              SizedBox(width: 2.0),
+              Text("▌",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orangeAccent)),
+              SizedBox(width: 10.0),
+              Text("菜系类型",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            ]),
             TypeItemWidget(_typeList),
 
-            Container(
-              height: 200,
-              child: Icon(Icons.photo,size: 180,
-              color: Colors.black12,
+            GestureDetector(
+              child: Container(
+                height: 200,
+                child: _imgUrl == null
+                    ? Icon(
+                        Icons.photo,
+                        size: 180,
+                        color: Colors.black12,
+                      )
+                    : Image.network(_imgUrl),
               ),
+              onTap: () async {
+                var imageFile = await ImagePicker.pickImage(
+                    imageQuality: 20, source: ImageSource.gallery);
+                uploadImageFile(imageFile);
+              },
             ),
 
             Margin(height: 20.0),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(width: 2.0),
-                  Text("▌",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orangeAccent)),
-                  SizedBox(width: 10.0),
-                  Text("联系地址",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13)),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              SizedBox(width: 2.0),
+              Text("▌",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orangeAccent)),
+              SizedBox(width: 10.0),
+              Text("联系地址",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            ]),
             SizedBox(height: 20),
 
             Padding(
@@ -160,10 +172,9 @@ class PageState extends BasePageState<HomePage> {
                         contentPadding: const EdgeInsets.all(10.0),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Colors.blue,
-                            )),
-                        labelStyle:
-                        TextStyle(color: Colors.grey, fontSize: 14),
+                          color: Colors.blue,
+                        )),
+                        labelStyle: TextStyle(color: Colors.grey, fontSize: 14),
                         labelText: "店铺所在位置..."),
                     onChanged: (String str) {
                       if (str.length >= 30) {
@@ -248,20 +259,17 @@ class PageState extends BasePageState<HomePage> {
 //            ),
             SizedBox(height: 20.0),
             //联系方式
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(width: 2.0),
-                  Text("▌",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orangeAccent)),
-                  SizedBox(width: 10.0),
-                  Text("联系方式",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13)),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              SizedBox(width: 2.0),
+              Text("▌",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orangeAccent)),
+              SizedBox(width: 10.0),
+              Text("联系方式",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            ]),
             //联系方式
             Padding(
               padding: EdgeInsets.all(2.0),
@@ -280,10 +288,9 @@ class PageState extends BasePageState<HomePage> {
                     keyboardType: TextInputType.text,
                     decoration: new InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.lightBlue, width: 2)),
-                        labelStyle:
-                        TextStyle(color: Colors.grey, fontSize: 14),
+                            borderSide:
+                                BorderSide(color: Colors.lightBlue, width: 2)),
+                        labelStyle: TextStyle(color: Colors.grey, fontSize: 14),
                         contentPadding: const EdgeInsets.all(10.0),
                         labelText: "你的手机号、QQ、微信..."),
                   ),
@@ -314,7 +321,7 @@ class PageState extends BasePageState<HomePage> {
                             contentPadding: const EdgeInsets.all(10.0),
                             hintText: '备注：菜品详细内容...',
                             hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 14),
+                                TextStyle(color: Colors.grey, fontSize: 14),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.blue,
@@ -344,19 +351,7 @@ class PageState extends BasePageState<HomePage> {
                   style: TextStyle(fontSize: 15),
                 ),
                 onPressed: () {
-                  showDialog(context: context,
-                  child: AlertDialog(
-                    title: Text("上架成功"),
-                    content: Text("新菜品上架成功啦，快去分享给用户享用吧～～～"),
-
-                    actions: <Widget>[
-                      FlatButton(onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("确定"),)
-                    ],
-                  )
-                  );
+                  uploadNewGoods();
                 },
               ),
             )
@@ -372,8 +367,47 @@ class PageState extends BasePageState<HomePage> {
   String pageTitle() {
     return "上架新菜品";
   }
-}
 
+  void uploadImageFile(File imageFile) {
+    if (imageFile == null) {
+      DataPlugin.toast("请先选择文件");
+      return;
+    }
+    DataPlugin.toast("上传中，请稍候……");
+    BmobFileManager.upload(imageFile).then((BmobFile bmobFile) {
+      this.setState(() {
+        _imgUrl = bmobFile.url;
+      });
+//      print("${bmobFile.cdn}\n${bmobFile.url}\n${bmobFile.filename}");
+//      DataPlugin.toast(
+//          "上传成功：${bmobFile.cdn}\n${bmobFile.url}\n${bmobFile.filename}");
+    }).catchError((e) {
+      DataPlugin.toast(BmobError.convert(e).error);
+    });
+  }
+
+  void uploadNewGoods() {
+
+
+
+
+    showDialog(
+        context: context,
+        child: AlertDialog(
+          title: Text("上架成功"),
+          content: Text("新菜品上架成功啦，快去分享给用户享用吧～～～"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("确定"),
+            )
+          ],
+        ));
+
+  }
+}
 
 class TypeItemEntity {
   String title;
